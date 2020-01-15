@@ -1,30 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+// #include <limits.h>
+#include <getopt.h>
+#include <errno.h>
 
 #define MAX_LINE_LENGTH 65536
 
 static void do_tail(FILE *f, long nlines);
+static void help(char *cmd);
+
+static struct option longopts[] = {
+    {"lines", required_argument, NULL, 'n'},
+    {0, 0, 0, 0}};
 
 int main(int argc, char *argv[])
 {
-  int i;
+  int i, opt;
   FILE *f;
-  long nlines = 2;
+  long nlines = 10;
 
-  if (argc < 1)
+  while ((opt = getopt_long(argc, argv, "n:", longopts, NULL)) != -1)
   {
-    fprintf(stderr, "Usage: %s [file file...]\n", argv[0]);
-    exit(1);
+    switch (opt)
+    {
+    case 'n':
+      errno = 0;
+      nlines = strtol(optarg, NULL, 10);
+      if (errno == ERANGE || errno == EINVAL)
+      {
+        fprintf(stderr, "invalid argument: %s\n", optarg);
+        help(argv[0]);
+        exit(1);
+      }
+      break;
+    case 'h':
+      help(argv[0]);
+      exit(0);
+    case '?':
+      help(argv[0]);
+      exit(1);
+    }
   }
 
-  if (argc == 1)
+  if (argc == optind)
   {
     do_tail(stdin, nlines);
     exit(0);
   }
 
-  for (i = 1; i < argc; i++)
+  for (i = optind; i < argc; i++)
   {
     f = fopen(argv[i], "r");
 
@@ -100,4 +124,9 @@ static void do_tail(FILE *f, long nlines)
     putchar('\n');
     // printf("i < q: %d < %ld\n", i, q);
   }
+}
+
+static void help(char *cmd)
+{
+  fprintf(stderr, "Usage: %s [-n NUM | --lines=NUM] [FILE]...\n", cmd);
 }
