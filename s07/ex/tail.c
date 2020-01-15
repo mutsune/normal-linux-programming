@@ -7,7 +7,7 @@
 #define MAX_LINE_LENGTH 65536
 
 static void do_tail(FILE *f, long nlines);
-static void help(char *cmd);
+static void help(char *cmd, int status);
 
 static struct option longopts[] = {
     {"lines", required_argument, NULL, 'n'},
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   FILE *f;
   long nlines = 10;
 
-  while ((opt = getopt_long(argc, argv, "n:", longopts, NULL)) != -1)
+  while ((opt = getopt_long(argc, argv, "n:h", longopts, NULL)) != -1)
   {
     switch (opt)
     {
@@ -29,16 +29,13 @@ int main(int argc, char *argv[])
       if (errno == ERANGE || errno == EINVAL)
       {
         fprintf(stderr, "invalid argument: %s\n", optarg);
-        help(argv[0]);
-        exit(1);
+        help(argv[0], 1);
       }
       break;
     case 'h':
-      help(argv[0]);
-      exit(0);
+      help(argv[0], 0);
     case '?':
-      help(argv[0]);
-      exit(1);
+      help(argv[0], 1);
     }
   }
 
@@ -126,7 +123,8 @@ static void do_tail(FILE *f, long nlines)
   }
 }
 
-static void help(char *cmd)
+static void help(char *cmd, int status)
 {
   fprintf(stderr, "Usage: %s [-n NUM | --lines=NUM] [FILE]...\n", cmd);
+  exit(status);
 }
