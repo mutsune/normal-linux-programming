@@ -49,8 +49,6 @@ static void do_tail(FILE *f, long nlines)
   long p = 0;
   long q = 0;
   char c = 0;
-  // long k = 0;
-  // long n = 0;
 
   if (nlines <= 0)
   {
@@ -68,51 +66,6 @@ static void do_tail(FILE *f, long nlines)
       p = ++i % nlines;
     }
   }
-  // exit(0);
-
-  // c = getc(f);
-  // printf("%d", (int)c);
-  // exit(1);
-
-  // while ((int)(c = (char)getc(f)) != EOF)
-  // {
-  //   if (c == '\n')
-  //   {
-  //     i++;
-  //     j = 0;
-  //   }
-  //   buffer[i % nlines][j++] = c;
-  // }
-
-  // for (n = 0; n < nlines; n++)
-  // {
-  //   j = 0;
-  //   k = i < nlines ? 0 : (i + 1) % nlines;
-  //   if (buffer[k][j] == '\0')
-  //   {
-  //     return;
-  //   }
-  //   while (putchar(buffer[k][j]) > 0)
-  //   {
-  //     j++;
-  //   }
-  // }
-
-  // for (i = 0; i < sizeof(buffer) / sizeof(buffer[0]); i++)
-  // {
-  //   for (j = 0; j < sizeof(buffer[i]) / sizeof(buffer[i][0]); j++)
-  //   {
-  //     if (buffer[i][j] == '\0')
-  //     {
-  //       return;
-  //     }
-
-  //     if (putchar(buffer[i][j]) < 0)
-  //     {
-  //       exit(1);
-  //     }
-  //   }
-  // }
 
   if (i < nlines)
   {
